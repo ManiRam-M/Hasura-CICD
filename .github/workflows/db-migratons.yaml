@@ -24,8 +24,8 @@ jobs:
       - name: Apply Migrations
         run: |
           cd hasura-project
-          hasura migrate apply --endpoint ${{ secrets.HASURA_ENDPOINT }} \
-                                --admin-secret ${{secrets.HASURA_ADMIN_SECRET}} \
+          hasura migrate apply --endpoint http://localhost:8080/console \
+                                --admin-secret myadminsecret \
                                 --database-name postgres \
                                 --skip-update-check
 
