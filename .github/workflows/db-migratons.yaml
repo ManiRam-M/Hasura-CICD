@@ -1,0 +1,44 @@
+name: Database Changes and Hasura Metadata Sync
+
+"on":
+  push:
+    branches: [main]
+    paths:
+      - "hasura-project/migrations/**"
+      - "hasura-project/metadata/**"
+  pull_request:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Hasura CLI
+        run: |
+          curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
+          echo "$HOME/.hasura/bin" >> $GITHUB_PATH
+
+      - name: Apply Migrations
+        run: |
+          cd hasura-project
+          hasura migrate apply --endpoint ${{ secrets.HASURA_ENDPOINT }} \
+                                --admin-secret ${{secrets.HASURA_ADMIN_SECRET}} \
+                                --database-name postgres \
+                                --skip-update-check
+
+      - name: Apply Metadata
+        run: |
+          cd hasura-project
+          hasura metadata apply --endpoint ${{ secrets.HASURA_ENDPOINT }} \
+                                --admin-secret ${{secrets.HASURA_ADMIN_SECRET}} \
+                                --skip-update-check
+
+      - name: Reload Metadata
+        run: |
+          cd hasura-project
+          hasura metadata reload --endpoint ${{ secrets.HASURA_ENDPOINT }} \
+                                --admin-secret ${{secrets.HASURA_ADMIN_SECRET}} \
+                                --skip-update-check
