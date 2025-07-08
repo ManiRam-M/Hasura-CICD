@@ -21,24 +21,30 @@ jobs:
           curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | bash
           echo "$HOME/.hasura/bin" >> $GITHUB_PATH
 
-      - name: Apply Migrations
+      - name: Greeting the member
+        env:
+          Name: "Mani Ram"
         run: |
-          cd hasura-project
-          hasura migrate apply --endpoint http://localhost:8080/console \
-                                --admin-secret myadminsecret \
-                                --database-name postgres \
-                                --skip-update-check
+          echo "Hello $env"
 
-      - name: Apply Metadata
-        run: |
-          cd hasura-project
-          hasura metadata apply --endpoint ${{ secrets.HASURA_ENDPOINT }} \
-                                --admin-secret ${{secrets.HASURA_ADMIN_SECRET}} \
-                                --skip-update-check
+      # - name: Apply Migrations
+      #   run: |
+      #     cd hasura-project
+      #     hasura migrate apply --endpoint ${{ secrets.HASURA_ENDPOINT }} \
+      #                           --admin-secret ${{secrets.HASURA_ADMIN_SECRET}} \
+      #                           --database-name postgres \
+      #                           --skip-update-check
 
-      - name: Reload Metadata
-        run: |
-          cd hasura-project
-          hasura metadata reload --endpoint ${{ secrets.HASURA_ENDPOINT }} \
-                                --admin-secret ${{secrets.HASURA_ADMIN_SECRET}} \
-                                --skip-update-check
+      # - name: Apply Metadata
+      #   run: |
+      #     cd hasura-project
+      #     hasura metadata apply --endpoint ${{ secrets.HASURA_ENDPOINT }} \
+      #                           --admin-secret ${{secrets.HASURA_ADMIN_SECRET}} \
+      #                           --skip-update-check
+
+      # - name: Reload Metadata
+      #   run: |
+      #     cd hasura-project
+      #     hasura metadata reload --endpoint ${{ secrets.HASURA_ENDPOINT }} \
+      #                           --admin-secret ${{secrets.HASURA_ADMIN_SECRET}} \
+      #                           --skip-update-check
